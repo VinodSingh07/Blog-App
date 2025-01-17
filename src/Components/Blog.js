@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 
 //Blogging App using Hooks
 export default function Blog() {
@@ -7,6 +7,19 @@ export default function Blog() {
   const [formData, setFormData] = useState({ title: "", content: "" });
   const [blogs, setBlogs] = useState([]);
   const titleRef = useRef(null);
+
+  //initial focus on title field
+  useEffect(() => {
+    titleRef.current.focus();
+  }, []); //equivalent to componentDidMount in class based component after giving empty dependencies
+
+  useEffect(() => {
+    if (blogs.length && blogs[0].title) {
+      document.title = blogs[0].title;
+    } else {
+      document.title = "No Blogs";
+    }
+  });
 
   //Passing the synthetic event as argument to stop refreshing the page on submit
   function handleSubmit(e) {
@@ -17,6 +30,7 @@ export default function Blog() {
     // setTitle("");
     // setContent("")
 
+    //focus on title field after add button is clicked
     titleRef.current.focus();
     console.log(blogs);
   }
@@ -41,6 +55,7 @@ export default function Blog() {
               placeholder="Enter the Title of the Blog here.."
               value={formData.title}
               ref={titleRef}
+              required
               onChange={(e) =>
                 setFormData({
                   title: e.target.value,
@@ -56,6 +71,7 @@ export default function Blog() {
               className="input content"
               placeholder="Content of the Blog goes here.."
               value={formData.content}
+              required
               onChange={(e) =>
                 setFormData({ title: formData.title, content: e.target.value })
               }
